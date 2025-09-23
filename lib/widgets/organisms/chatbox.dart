@@ -100,13 +100,14 @@ class _CompactView extends Chatbox {
                             children: [
                               Expanded(
                                 child: TextField(
+                                  maxLines: Sizes.compactChatBoxMaxLines,
+                                  minLines: 1,
                                   textInputAction: isMultiLine
                                       ? TextInputAction.newline
                                       : TextInputAction.send,
-                                  maxLines: null,
                                   scrollPadding: EdgeInsets.only(
                                     bottom: Sizes.chatBoxScrollPadding,
-                                  ), 
+                                  ),
                                   controller: controller,
                                   onChanged: !disabled ? onChange : null,
                                   enabled: !disabled,
@@ -173,7 +174,10 @@ class _CompactView extends Chatbox {
                           if (isMultiLine)
                             _ActionsWrap(
                               actionButtons: [...actionButtons],
-                              menuTrigger: _MenuTrigger(menuItems: menuItems, layoutSize: layoutSize,),
+                              menuTrigger: _MenuTrigger(
+                                menuItems: menuItems,
+                                layoutSize: layoutSize,
+                              ),
                             )
                           else
                             SizedBox.shrink(),
@@ -236,10 +240,11 @@ class _ExpandedView extends Chatbox {
                               textInputAction: isMultiLine
                                   ? TextInputAction.newline
                                   : TextInputAction.send,
-                              maxLines: null,
+                              maxLines: Sizes.expandedChatBoxMaxLines,
+                              minLines: 1,
                               scrollPadding: EdgeInsets.only(
                                 bottom: Sizes.chatBoxScrollPadding,
-                              ), 
+                              ),
                               controller: controller,
                               onChanged: !disabled ? onChange : null,
                               enabled: !disabled,
@@ -305,7 +310,10 @@ class _ExpandedView extends Chatbox {
                       if (isMultiLine)
                         _ActionsWrap(
                           actionButtons: [...actionButtons],
-                          menuTrigger: _MenuTrigger(menuItems: menuItems, layoutSize: layoutSize,),
+                          menuTrigger: _MenuTrigger(
+                            menuItems: menuItems,
+                            layoutSize: layoutSize,
+                          ),
                         )
                       else
                         SizedBox.shrink(),
@@ -404,22 +412,24 @@ class _MenuTrigger extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.menu),
       onPressed: () {
-        layoutSize == LayoutSize.compact? showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(Gaps.def.sm),
-            ),
-          ),
-          builder: (BuildContext context) {
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: Gaps.def.xxs),
-              child: Wrap(children: menuItems),
-            );
-          },
-        ): SizedBox() //Mat3 popover
-        ;
+        layoutSize == LayoutSize.compact
+            ? showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(Gaps.def.sm),
+                  ),
+                ),
+                builder: (BuildContext context) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Gaps.def.xxs),
+                    child: Wrap(children: menuItems),
+                  );
+                },
+              )
+            : SizedBox() //Mat3 popover
+              ;
       },
     );
   }

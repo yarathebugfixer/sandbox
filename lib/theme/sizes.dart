@@ -4,7 +4,6 @@ class Sizes {
   static const double mobileBreakpoint = 600.0;
   static const double tabletBreakpoint = 840.0;
 
-
   static const double dropdownMenuMaxWidth = 450.0;
   static const double dropdownMenuAlignmentX = 5;
   static const double dropdownMenuAlignmentY = 5;
@@ -19,13 +18,14 @@ class Sizes {
   static const double inputMaxWidth = 350.0;
 
   static const double chatBoxMaxWidth = 375.0;
-  static const double chatBoxMaxHeight = 200.0;
+  static const double chatBoxMaxHeight = 250.0;
+
   static const double chatBoxScrollPadding = 120.0;
 
   static const double compactMultiLineThreshHold = 25;
   static const double expandedMultiLineThreshHold = 150;
-
-
+  static const int compactChatBoxMaxLines = 3;
+  static const int expandedChatBoxMaxLines = 5;
   static const double chatBoxGap = 5;
   static const double trailingIconsBoxWidth = 96.0;
 
