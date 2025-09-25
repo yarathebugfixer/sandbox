@@ -1,1 +1,1 @@
-export 'chatbox.dart';
+export 'chatbox/index.dart';

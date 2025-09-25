@@ -15,17 +15,26 @@ class Sizes {
   static const double bottomNavBarItemsGap = 10;
   static const double bottomNavBarItemSpacing = 7;
 
-  static const double inputMaxWidth = 350.0;
+  static const double inputMaxWidth = 320.0;
+  static const double expandedInputMaxWidth = double.infinity;
 
-  static const double chatBoxMaxWidth = 375.0;
+  static const double waveformWidth = 220.0;
+  static const double waveformHeight = 50.0;
+
+  static const double expandedWaveformMaxWidth = 700.0;
+
+  static const double chatBoxMaxWidth = 385.0;
+  static const double expandedChatBoxMaxWidth = 800;
   static const double chatBoxMaxHeight = 250.0;
 
   static const double chatBoxScrollPadding = 120.0;
 
   static const double compactMultiLineThreshHold = 25;
   static const double expandedMultiLineThreshHold = 150;
+
   static const int compactChatBoxMaxLines = 3;
   static const int expandedChatBoxMaxLines = 5;
+
   static const double chatBoxGap = 5;
   static const double trailingIconsBoxWidth = 96.0;
 

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sandbox/theme/app.dart';
 import 'package:sandbox/theme/breakpoints.dart';
-import 'package:sandbox/theme/extension.dart';
 import 'package:sandbox/theme/gaps.dart';
 import 'package:sandbox/theme/sizes.dart';
 import 'package:sandbox/types/chatbox_menu_item.dart';
+import 'package:sandbox/util/ring_buffer.dart';
+import 'package:sandbox/util/wave_capture.dart';
+import 'package:sandbox/voice_capture_bloc.dart';
 import 'package:sandbox/widgets/molecules/chatbox_menu_item.dart';
-import 'package:sandbox/widgets/organisms/chatbox.dart';
+import 'package:sandbox/widgets/organisms/chatbox/index.dart';
 
 class Page extends StatefulWidget {
   Page({Key? key}) : super(key: key);
@@ -51,7 +54,8 @@ class PageController extends State<Page> {
 class PageView extends StatelessWidget {
   final PageController state;
   PageView(this.state, {Key? key}) : super(key: key);
-
+  final RingBuffer<double> buffer = RingBuffer<double>(length: 64, 0.0);
+  
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -69,29 +73,36 @@ class PageView extends StatelessWidget {
           appBar: AppBar(title: Text('Chatbox Sandbox')),
           bottomNavigationBar: Padding(
             padding: layoutSize == LayoutSize.expanded
-                ? EdgeInsetsGeometry.all(Gaps.def.sm)
-                : EdgeInsetsGeometry.zero,
-            child: Chatbox(
-              controller: state.textController,
-              isComposerOpen: state.isComposerOpen,
-              layoutSize: layoutSize,
-              menuItems: state.menuItems,
-              openComposer: state.toggleComposer,
-              actionButtons: [
-                IconButton(
-                  icon: Icon(Icons.attach_file),
-                  onPressed: () {
-                    print('Attach tapped');
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.emoji_emotions),
-                  onPressed: () {
-                    print('Emoji tapped');
-                  },
-                ),
-              ],
-              keyboardVisible: true,
+                ? EdgeInsets.all(Gaps.def.sm)
+                : EdgeInsets.zero,
+            child: BlocBuilder<LiveAudioBloc, LiveAudioBlocState>(
+              builder: (context, audioState) {
+                  final audioBloc = context.read<LiveAudioBloc>();
+                return Chatbox(
+                  controller: state.textController,
+                  isComposerOpen: state.isComposerOpen,
+                  layoutSize: layoutSize,
+                  liveAudioState: audioState.state,
+                  menuItems: state.menuItems,
+                  openComposer: state.toggleComposer,
+                  voiceCaptureStream: audioBloc.amplitudeStream ?? const Stream.empty(),
+                  voiceCaptureBuffer: buffer,
+                  actionButtons: [
+                    IconButton(
+                      icon: Icon(Icons.attach_file),
+                      onPressed: () {
+                        print('Attach tapped');
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.emoji_emotions),
+                      onPressed: () {
+                        print('Emoji tapped');
+                      },
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           body: Center(child: Text('Place any content here')),
@@ -101,4 +112,11 @@ class PageView extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(home: Page(), theme: AppTheme.light));
+void main() {
+  runApp(
+    BlocProvider(
+      create: (_) => LiveAudioBloc(),
+      child: MaterialApp(home: Page(), theme: AppTheme.light),
+    ),
+  );
+}
