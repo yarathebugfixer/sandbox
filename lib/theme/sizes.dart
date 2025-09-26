@@ -21,21 +21,21 @@ class Sizes {
   static const double waveformWidth = 220.0;
   static const double waveformHeight = 50.0;
 
-  static const double expandedWaveformMaxWidth = 700.0;
+  static const double expandedWaveformMaxWidth = 500;
 
-  static const double chatBoxMaxWidth = 385.0;
-  static const double expandedChatBoxMaxWidth = 800;
+  static const double chatBoxMaxWidth = 200.0;
+  static const double chatBoxMenuWidth = 300.0;
+
+  static const double expandedChatBoxMaxWidth = 820;
   static const double chatBoxMaxHeight = 250.0;
 
   static const double chatBoxScrollPadding = 120.0;
 
-  static const double compactMultiLineThreshHold = 25;
-  static const double expandedMultiLineThreshHold = 150;
-
-  static const int compactChatBoxMaxLines = 3;
-  static const int expandedChatBoxMaxLines = 5;
+  static const double multiLineThreshHold = 25;
 
   static const double chatBoxGap = 5;
+  static const double composerButtonSize = 55;
+
   static const double trailingIconsBoxWidth = 96.0;
 
   static const double textAreaMaxWidth = double.infinity;

@@ -12,19 +12,21 @@ class TextComposer extends StatelessWidget {
     required this.controller,
     required this.actionButtons,
     this.placeholder,
-    this.onChange,
+    this.onText,
     required this.disabled,
     required this.layoutSize,
+    required this.isMultiLine,
     required this.menuItems,
   });
 
   final String? placeholder;
-  final ValueChanged<String>? onChange;
+  final ValueChanged<String>? onText;
   final TextEditingController controller;
   final bool disabled;
   final LayoutSize layoutSize;
+  final List<ChatboxMenuItemButton> actionButtons;
+  final bool isMultiLine;
   final List<ChatboxMenuItemButton> menuItems;
-  final List<IconButton> actionButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +41,18 @@ class TextComposer extends StatelessWidget {
         valueListenable: controller,
         builder: (_, value, __) {
           final isMultiLine =
-              value.text.length > Sizes.compactMultiLineThreshHold ||
+              value.text.length > Sizes.multiLineThreshHold ||
               controller.text.contains('\n');
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Expanded(
                     child: TextField(
-                      maxLines: Sizes.compactChatBoxMaxLines,
                       minLines: 1,
+                      maxLines: null,
                       textInputAction: isMultiLine
                           ? TextInputAction.newline
                           : TextInputAction.send,
@@ -58,7 +60,7 @@ class TextComposer extends StatelessWidget {
                         bottom: Sizes.chatBoxScrollPadding,
                       ),
                       controller: controller,
-                      onChanged: !disabled ? onChange : null,
+                      onChanged: !disabled ? onText : null,
                       enabled: !disabled,
                       decoration: InputDecoration(
                         hintText: placeholder,
@@ -68,7 +70,10 @@ class TextComposer extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                   horizontal: Gaps.def.xxs,
                                 ),
-                                child: Icon(Icons.menu),
+                                child: MenuTrigger(
+                                  menuItems: menuItems,
+                                  layoutSize: layoutSize,
+                                ),
                               ),
                         suffixIcon: isMultiLine
                             ? null
@@ -77,7 +82,12 @@ class TextComposer extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
-                                  children: actionButtons,
+                                  children: actionButtons.map((button) {
+                                    return IconButton(
+                                      icon: Icon(button.chatboxMenuItem.icon),
+                                      onPressed: button.chatboxMenuItem.onClick,
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                         filled: true,

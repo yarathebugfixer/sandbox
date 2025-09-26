@@ -1,11 +1,10 @@
 class RingBuffer<T> {
   final int length;
-  final T fill;
   final List<T?> _buffer;
   int _index = 0;
   int _count = 0;
 
-  RingBuffer(this.fill, {required this.length}) : _buffer = List<T?>.filled(length, fill);
+  RingBuffer( {required this.length}) : _buffer = List<T?>.filled(length, null);
 
   void push(T item) {
     _buffer[_index] = item;

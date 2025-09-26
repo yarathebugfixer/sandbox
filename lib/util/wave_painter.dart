@@ -12,7 +12,7 @@ class WavePainter extends CustomPainter {
     print(currentWaves);
     final paint = Paint()
       ..color = theme.colorScheme.primary
-      ..strokeWidth = 4
+      ..strokeWidth = 2
       ..strokeCap = StrokeCap.round;
 
     final barWidth = size.width / currentWaves.length;

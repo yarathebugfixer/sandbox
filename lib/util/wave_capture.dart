@@ -18,7 +18,7 @@ class WaveCapture {
       throw Exception('Microphone permission not granted');
     }
     await _recorder.openRecorder();
-    await _recorder.setSubscriptionDuration(Duration(milliseconds: 50));
+    await _recorder.setSubscriptionDuration(Duration(milliseconds: 30));
   }
 
   /// Start recording;
@@ -40,15 +40,10 @@ class WaveCapture {
     await _recorder.closeRecorder();
   }
 
-  Future<void> pauseRecording() async {
-    if (!_recorder.isPaused) {
-      await _recorder.pauseRecorder();
-    } 
-  }
-
-   Future<void> resumeRecording() async {
-    if (!_recorder.isRecording) {
-      await _recorder.resumeRecorder();
-    } 
+  Future<void> stopRecording() async {
+    //first we save, etc
+    //return something back to bloc ie. recording path or smth
+    cancelRecording();
+    _amplitudeStream = null;
   }
 }

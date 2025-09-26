@@ -11,6 +11,8 @@ class ComposerButton extends StatelessWidget {
   final TextEditingController controller;
   final LayoutSize layoutSize;
   final LiveAudioState liveAudioState;
+    final VoidCallback onVoice;
+
 
   ComposerButton({
     required this.isComposerOpen,
@@ -18,6 +20,7 @@ class ComposerButton extends StatelessWidget {
     required this.controller,
     required this.layoutSize,
     required this.liveAudioState,
+    required this.onVoice
   });
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,19 @@ class ComposerButton extends StatelessWidget {
     void onSubmit(String text) {}
 
     void onVoiceCapture(BuildContext context) {
-      context.read<LiveAudioBloc>().add(StartRecording());
+      //onVoice belongs here
+      final bloc = context.read<LiveAudioBloc>();
+      switch (liveAudioState) {
+        case LiveAudioState.idle:
+          bloc.add(StartRecording());
+          break;
+        case LiveAudioState.listening:
+          bloc.add(StopRecording());
+          break;
+        case LiveAudioState.readyToSend:
+          bloc.add(SendRecording());
+          break;
+      }
     }
 
     return ValueListenableBuilder<TextEditingValue>(
@@ -42,11 +57,10 @@ class ComposerButton extends StatelessWidget {
             return Icons.graphic_eq;
           }
         }
-
         return Semantics(
           label: "Listening....",
           child: Padding(
-            padding: EdgeInsetsGeometry.only(left: Gaps.def.xxs),
+            padding: EdgeInsetsGeometry.only(left: Gaps.def.xs),
             child: AnimatedSwitcher(
               duration: Duration(milliseconds: 150),
               child: Material(
